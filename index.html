@@ -1,0 +1,661 @@
+<style>
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+           /* backdrop-filter: blur(10px);*/
+ 	  user-select: none;
+  	  -webkit-user-select: none;
+  	  -moz-user-select: none;
+  	  -ms-user-select: none;
+        }
+
+   
+
+    @keyframes fall {
+        0% {
+            transform: translateY(-100vh) translateX(0);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) translateX(500px);
+            opacity: 0.3;
+        }
+    }
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+          /*   backdrop-filter: blur(12px);*/
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 15px rgba(33, 150, 243, 0.8);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, #2196F3, #e91e63);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #90caf9;
+            margin: 2rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(144, 202, 249, 0.3);
+        }
+	.disclaimer {
+    text-align: center;
+    color: #ff5252;
+    font-size: 0.9rem;
+    margin: -1rem 0 2rem 0;
+    text-shadow: 0 0 8px rgba(255, 82, 82, 0.3);
+    animation: disclaimerPulse 2s ease-in-out infinite;
+}
+
+@keyframes disclaimerPulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+      
+       .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+            gap: 1rem; 
+            margin: 2rem 0;
+        }
+
+      
+.thumbnail-item {
+    position: relative;
+    border-radius: 8px; 
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    width: 120px; 
+    height: 80px;  
+	 transform: translateZ(0); 
+    will-change: transform;
+}
+ 	
+        .thumbnail-item img {
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 12px; 
+        }
+        .thumbnail-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, 
+                transparent 0%, 
+                rgba(33, 150, 243, 0.2) 50%, 
+                transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .thumbnail-item:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 12px 32px rgba(33, 150, 243, 0.4);
+        }
+
+        .thumbnail-item:hover::before {
+            opacity: 1;
+        }
+
+        .thumbnail-item.selected {
+            border: 2px solid #2196F3;
+            box-shadow: 0 0 25px rgba(33, 150, 243, 0.5),
+                        inset 0 0 15px rgba(33, 150, 243, 0.3);
+            animation: selectedPulse 1.5s ease-in-out infinite;
+        }
+
+        
+        button {
+            position: relative;
+            background: linear-gradient(45deg, #2196F3, #3F51B5);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+	 transform: translateZ(0);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
+        }
+
+        button:hover::before {
+            animation: buttonGlow 1.5s ease-out forwards;
+        }
+
+        
+        input[type="file"],
+        input[type="number"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        input[type="file"]:hover,
+        input[type="number"]:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #2196F3;
+        }
+
+        
+        #selectedCount {
+            font-size: 1.2rem;
+            padding: 8px 16px;
+            background: rgba(33, 150, 243, 0.15);
+            border-radius: 6px;
+            margin-left: 1rem;
+            display: inline-block;
+            backdrop-filter: blur(5px);
+        }
+
+        
+        .preview-item {
+            position: relative;
+            transition: transform 0.3s;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 150px; 
+            margin: 0 10px 10px 0; 
+            display: inline-block; 
+        }
+	
+        #previewContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .preview-item:hover {
+            transform: scale(1.05) rotate(2deg);
+            z-index: 2;
+        }
+
+       
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 68, 68, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            color: white;
+            font-weight: bold;
+            line-height: 24px;
+            padding: 0;
+            transition: all 0.3s;
+            opacity: 0.8;
+        }
+
+        .remove-btn:hover {
+            transform: scale(1.2) rotate(90deg);
+            opacity: 1;
+            box-shadow: 0 2px 8px rgba(255, 68, 68, 0.6);
+        }
+
+        
+        #mergedCanvas {
+    max-width: 100%;
+    height: auto !important;
+    width: auto !important;
+    display: block;
+    margin: 2rem auto;
+}
+	
+       
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 10px rgba(33, 150, 243, 0.5); }
+            to { text-shadow: 0 0 30px rgba(33, 150, 243, 0.8); }
+        }
+
+        @keyframes selectedPulse {
+            0% { box-shadow: 0 0 15px rgba(33, 150, 243, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(33, 150, 243, 0.6); }
+            100% { box-shadow: 0 0 15px rgba(33, 150, 243, 0.3); }
+        }
+
+        @keyframes buttonGlow {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            
+            .thumbnail-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>枪神纪拼图工具</title>
+</head>
+<body>
+    <div class="container">
+        <h1>枪神纪拼图工具</h1>
+	<p class="disclaimer"> iIin制作 本工具严禁用于任何商业用途 请在全屏分辨率为1920x1080下仓库截图</p> 
+        <div>
+            <h2>第一步：上传多张1920×1080图片</h2>
+            <input type="file" id="uploadInput" accept="image/*" multiple>
+            <div id="originalPreview" class="hidden"></div>
+        </div>
+        <div id="cropSection" class="hidden">
+            <h2>第二步：选择需要拼接的区域</h2>
+            <div class="image-switcher">
+                <button onclick="switchImage(-1)">上一张</button>
+                <span id="currentImageInfo">图片 1 / 1</span>
+                <button onclick="switchImage(1)">下一张</button>
+            </div>
+            <div class="thumbnail-grid" id="thumbnailContainer"></div>
+            <div style="margin: 10px 0;">
+                <label>拼接列数（可选）: </label>
+                <input type="number" id="columnsInput" min="1" style="padding: 5px; width: 80px;">
+                <button onclick="mergeSelected()">开始拼接</button>
+                <span id="selectedCount">已选0项</span>
+            </div>
+        </div>
+        <div id="previewSection" class="hidden">
+            <h2>第三步：预览拼接结果</h2>
+            <div id="previewContainer"></div>
+            <button onclick="confirmMerge()">确认拼接</button>
+        </div>
+        <div id="resultSection" class="hidden">
+            <h2>第四步：最终拼接结果</h2>
+            <canvas id="mergedCanvas"></canvas>
+            <button onclick="downloadResult()">下载拼接结果</button>
+        </div>
+    </div>
+
+    <script>
+        const regions = [
+            [493, 204, 758, 348],   // 1
+            [762, 204, 1026, 348],  // 2
+            [1031, 204, 1295, 348], // 3
+            [493, 404, 758, 548],   // 4
+            [762, 404, 1026, 548],  // 5
+            [1031, 404, 1295, 548], // 6
+            [493, 604, 758, 748],   // 7
+            [762, 604, 1026, 748],  // 8
+            [1031, 604, 1295, 748], // 9
+            [493, 805, 758, 949],   // 10
+            [762, 805, 1026, 949],  // 11
+            [1031, 805, 1295, 949]  // 12
+        ];
+
+        let selectedThumbnails = [];
+        let images = [];
+        let currentImageIndex = 0;
+
+        document.getElementById('uploadInput').addEventListener('change', async function(e) {
+	thumbnailCache.clear(); 
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+
+            images = [];
+            selectedThumbnails = [];
+            currentImageIndex = 0;
+            updateSelectedCount();
+
+            const sortedFiles = Array.from(files).sort((a, b) => {
+                const numA = parseInt(a.name.match(/\((\d+)\)/)?.[1] || 0, 10);
+                const numB = parseInt(b.name.match(/\((\d+)\)/)?.[1] || 0, 10);
+                return numA - numB;
+            });
+
+            for (let i = 0; i < sortedFiles.length; i++) {
+                const file = sortedFiles[i];
+                const img = await loadImage(file);
+                if (img.width !== 1920 || img.height !== 1080) {
+                    alert(`图片 ${file.name} 不是1920×1080分辨率，请重新上传！`);
+                    return;
+                }
+                images.push({ img, name: file.name });
+            }
+
+            showCropSection();
+            generateThumbnails();
+        });
+
+        function loadImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        resolve(img);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+	const thumbnailCache = new Map(); 
+	const worker = new Worker('worker.js');
+         function generateThumbnails() {
+            const container = document.getElementById('thumbnailContainer');
+            container.innerHTML = '';
+
+            const currentImage = images[currentImageIndex].img;
+	const cacheKey = `${currentImageIndex}_${currentImage.src}`;
+	if (thumbnailCache.has(cacheKey)) {
+        container.innerHTML = thumbnailCache.get(cacheKey);
+	 container.querySelectorAll('.thumbnail-item').forEach(wrapper => {
+            wrapper.addEventListener('click', function() {
+                const checkbox = this.querySelector('input');
+                checkbox.checked = !checkbox.checked;
+                toggleSelection({ target: checkbox });
+                this.classList.toggle('selected', checkbox.checked);
+                updateSelectedCount();
+            });
+        });
+        return;
+	worker.postMessage({
+        imgData: currentImage.src,
+        region: regions[regionIndex],
+        thumbSize: [THUMB_WIDTH, THUMB_HEIGHT]
+    });
+
+    worker.onmessage = function(e) {
+        wrapper.innerHTML = `
+            <input type="checkbox"...>
+            <img src="${e.data}">
+        `;
+    };
+    }
+	 const fragment = document.createDocumentFragment();
+            regions.forEach((region, regionIndex) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = (region[2] - region[0]) - 3; 
+                canvas.height = region[3] - region[1];
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(
+                    currentImage,
+                    region[0] + 2, 
+                    region[1],
+                    canvas.width,
+                    canvas.height,
+                    0, 0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                const wrapper = document.createElement('div');
+                const isChecked = selectedThumbnails.some(item => 
+                    item.imageIndex === currentImageIndex && 
+                    item.regionIndex === regionIndex
+                );
+                
+                wrapper.className = `thumbnail-item ${isChecked ? 'selected' : ''}`;
+                wrapper.innerHTML = `
+                    <input type="checkbox" 
+                           data-image-index="${currentImageIndex}" 
+                           data-region-index="${regionIndex}"
+                           ${isChecked ? 'checked' : ''}>
+                    <img src="${canvas.toDataURL()}" class="preview-img">
+                `;
+
+                wrapper.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input');
+                    checkbox.checked = !checkbox.checked;
+                    toggleSelection({ target: checkbox });
+                    this.classList.toggle('selected', checkbox.checked);
+                    updateSelectedCount();
+                });
+
+                container.appendChild(wrapper);
+            });
+
+            container.appendChild(fragment);
+    thumbnailCache.set(cacheKey, container.innerHTML);
+    document.getElementById('currentImageInfo').textContent = 
+        `图片 ${currentImageIndex + 1} / ${images.length}`;
+        }
+
+
+        function switchImage(direction) {
+	  const oldKey = `${currentImageIndex}_${images[currentImageIndex].img.src}`;
+            thumbnailCache.delete(oldKey);
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) currentImageIndex = images.length - 1;
+            if (currentImageIndex >= images.length) currentImageIndex = 0;
+            generateThumbnails();
+        }
+
+        function toggleSelection(e) {
+            const imageIndex = parseInt(e.target.dataset.imageIndex);
+            const regionIndex = parseInt(e.target.dataset.regionIndex);
+	  thumbnailCache.delete(`${imageIndex}_${images[imageIndex].img.src}`);
+            const key = { imageIndex, regionIndex };
+
+            const existingIndex = selectedThumbnails.findIndex(item => 
+                item.imageIndex === imageIndex && 
+                item.regionIndex === regionIndex
+            );
+
+            if (e.target.checked) {
+                if (existingIndex === -1) selectedThumbnails.push(key);
+            } else {
+                if (existingIndex !== -1) selectedThumbnails.splice(existingIndex, 1);
+            }
+        }
+
+        function updateSelectedCount() {
+            document.getElementById('selectedCount').textContent = 
+                `已选${selectedThumbnails.length}项`;
+        }
+
+        function showPreview(columns) {
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.innerHTML = '';
+            
+            selectedThumbnails.forEach((item, index) => {
+                const { imageIndex, regionIndex } = item;
+                const region = regions[regionIndex];
+                const img = images[imageIndex].img;
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = (region[2] - region[0]) - 3;
+                canvas.height = region[3] - region[1];
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(
+                    img, 
+                    region[0] + 2,
+                    region[1],
+                    canvas.width,
+                    canvas.height,
+                    0, 0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'preview-item';
+                wrapper.innerHTML = `
+                    <button class="remove-btn" onclick="removePreviewItem(${index})">×</button>
+                    <img src="${canvas.toDataURL()}" style="width: 100%; height: auto;"> <!-- 修改为宽度100% -->
+                `;
+                previewContainer.appendChild(wrapper);
+            });
+
+            document.getElementById('previewSection').classList.remove('hidden');
+        }
+
+        function removePreviewItem(index) {
+            const removed = selectedThumbnails.splice(index, 1)[0];
+            updateSelectedCount();
+            showPreview();
+            
+            // 更新对应的缩略图状态
+            const thumbnails = document.querySelectorAll('.thumbnail-item');
+            thumbnails.forEach(thumb => {
+                const checkbox = thumb.querySelector('input');
+                const imgIndex = parseInt(checkbox.dataset.imageIndex);
+                const regIndex = parseInt(checkbox.dataset.regionIndex);
+                
+                if (imgIndex === removed.imageIndex && regIndex === removed.regionIndex) {
+                    checkbox.checked = false;
+                    thumb.classList.remove('selected');
+                }
+            });
+        }
+
+        async function mergeSelected() {
+            if (selectedThumbnails.length === 0) {
+                alert('请至少选择一个区域！');
+                return;
+            }
+
+            let columns = parseInt(document.getElementById('columnsInput').value);
+            if (isNaN(columns) || columns < 1) {
+                columns = Math.ceil(Math.sqrt(selectedThumbnails.length));
+            }
+            
+            showPreview(columns);
+        }
+
+        function confirmMerge() {
+            const columns = parseInt(document.getElementById('columnsInput').value) || 
+                          Math.ceil(Math.sqrt(selectedThumbnails.length));
+            const rows = Math.ceil(selectedThumbnails.length / columns);
+
+            const firstRegion = regions[selectedThumbnails[0].regionIndex];
+            const tileWidth = (firstRegion[2] - firstRegion[0]) - 3;
+            const tileHeight = firstRegion[3] - firstRegion[1];
+
+            const resultCanvas = document.getElementById('mergedCanvas');
+            resultCanvas.width = Math.floor(tileWidth * columns);
+            resultCanvas.height = Math.floor(tileHeight * rows);
+            
+            const ctx = resultCanvas.getContext('2d');
+            ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height); // 清空画布
+            ctx.imageSmoothingEnabled = false;
+
+            selectedThumbnails.forEach((item, idx) => {
+                const { imageIndex, regionIndex } = item;
+                const region = regions[regionIndex];
+                const img = images[imageIndex].img;
+
+                const col = idx % columns;
+                const row = Math.floor(idx / columns);
+                const x = Math.floor(col * tileWidth);
+                const y = Math.floor(row * tileHeight);
+
+                ctx.drawImage(
+                    img,
+                    region[0] + 2,
+                    region[1],
+                    tileWidth,
+                    tileHeight,
+                    x,
+                    y,
+                    tileWidth,
+                    tileHeight
+                );
+            });
+		
+            document.getElementById('previewSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+	 function resizeCanvas() {
+        const containerWidth = document.querySelector('.container').clientWidth;
+        const scale = Math.min(1, (containerWidth - 40) / resultCanvas.width);
+        resultCanvas.style.width = `${resultCanvas.width * scale}px`;
+        resultCanvas.style.height = `${resultCanvas.height * scale}px`;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+	const debounceResize = _.debounce(resizeCanvas, 100);
+    window.addEventListener('resize', debounceResize);
+        }
+
+        function showCropSection() {
+            document.getElementById('cropSection').classList.remove('hidden');
+            document.getElementById('originalPreview').classList.add('hidden');
+        }
+
+        function downloadResult() {
+            const canvas = document.getElementById('mergedCanvas');
+            const link = document.createElement('a');
+            link.download = 'merged-image.png';
+            link.href = canvas.toDataURL('image/png'); // 确保透明通道
+            link.click();
+        }
+    </script>
+</body>
+</html>
